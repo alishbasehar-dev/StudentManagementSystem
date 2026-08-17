@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% if student %}
+            Edit Student
+        {% else %}
+            Add Student
+        {% endif %}
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body class="bg-light">
+
+
+<nav class="navbar navbar-dark bg-primary">
+
+    <div class="container">
+
+        <a
+            class="navbar-brand"
+            href="{% url 'student_list' %}"
+        >
+            Student Management System
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-8">
+
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h4 class="mb-0">
+
+                        {% if student %}
+                            Edit Student
+                        {% else %}
+                            Add Student
+                        {% endif %}
+
+                    </h4>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+
+                        <!-- ================================================= -->
+                        <!-- USER ACCOUNT INFORMATION -->
+                        <!-- ================================================= -->
+
+                        <h5 class="mb-3">
+                            Account Information
+                        </h5>
+
+
+                        <!-- Username -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="username"
+                                class="form-label"
+                            >
+                                Username
+                            </label>
+
+                            <input
+                                type="text"
+                                name="username"
+                                id="username"
+                                class="form-control"
+                                placeholder="Enter username"
+                                value="{% if student %}{{ student.user.username }}{% endif %}"
+                                {% if student %}readonly{% endif %}
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- First Name -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="first_name"
+                                class="form-label"
+                            >
+                                First Name
+                            </label>
+
+                            <input
+                                type="text"
+                                name="first_name"
+                                id="first_name"
+                                class="form-control"
+                                placeholder="Enter first name"
+                                value="{% if student %}{{ student.user.first_name }}{% endif %}"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Last Name -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="last_name"
+                                class="form-label"
+                            >
+                                Last Name
+                            </label>
+
+                            <input
+                                type="text"
+                                name="last_name"
+                                id="last_name"
+                                class="form-control"
+                                placeholder="Enter last name"
+                                value="{% if student %}{{ student.user.last_name }}{% endif %}"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Email -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="email"
+                                class="form-label"
+                            >
+                                Email
+                            </label>
+
+                            <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                class="form-control"
+                                placeholder="Enter email address"
+                                value="{% if student %}{{ student.user.email }}{% endif %}"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Password -->
+
+                        {% if not student %}
+
+                            <div class="mb-4">
+
+                                <label
+                                    for="password"
+                                    class="form-label"
+                                >
+                                    Password
+                                </label>
+
+                                <input
+                                    type="password"
+                                    name="password"
+                                    id="password"
+                                    class="form-control"
+                                    placeholder="Enter password"
+                                    required
+                                >
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <hr>
+
+
+                        <!-- ================================================= -->
+                        <!-- STUDENT INFORMATION -->
+                        <!-- ================================================= -->
+
+                        <h5 class="mb-3">
+                            Student Information
+                        </h5>
+
+
+                        <!-- Student ID -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="student_id"
+                                class="form-label"
+                            >
+                                Student ID
+                            </label>
+
+                            <input
+                                type="text"
+                                name="student_id"
+                                id="student_id"
+                                class="form-control"
+                                placeholder="e.g. student026"
+                                value="{% if student %}{{ student.student_id }}{% endif %}"
+                                {% if student %}readonly{% endif %}
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Phone -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="phone"
+                                class="form-label"
+                            >
+                                Phone
+                            </label>
+
+                            <input
+                                type="text"
+                                name="phone"
+                                id="phone"
+                                class="form-control"
+                                placeholder="e.g. 03001234567"
+                                value="{% if student %}{{ student.phone }}{% endif %}"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Date of Birth -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="date_of_birth"
+                                class="form-label"
+                            >
+                                Date of Birth
+                            </label>
+
+                            <input
+                                type="date"
+                                name="date_of_birth"
+                                id="date_of_birth"
+                                class="form-control"
+                                value="{% if student.date_of_birth %}{{ student.date_of_birth|date:'Y-m-d' }}{% endif %}"
+                            >
+
+                        </div>
+
+
+                        <!-- Gender -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="gender"
+                                class="form-label"
+                            >
+                                Gender
+                            </label>
+
+                            <select
+                                name="gender"
+                                id="gender"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+                                    Select Gender
+                                </option>
+
+                                <option
+                                    value="Male"
+                                    {% if student.gender == "Male" %}selected{% endif %}
+                                >
+                                    Male
+                                </option>
+
+                                <option
+                                    value="Female"
+                                    {% if student.gender == "Female" %}selected{% endif %}
+                                >
+                                    Female
+                                </option>
+
+                                <option
+                                    value="Other"
+                                    {% if student.gender == "Other" %}selected{% endif %}
+                                >
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Address -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="address"
+                                class="form-label"
+                            >
+                                Address
+                            </label>
+
+                            <textarea
+                                name="address"
+                                id="address"
+                                class="form-control"
+                                rows="3"
+                                placeholder="Enter address"
+                            >{% if student %}{{ student.address }}{% endif %}</textarea>
+
+                        </div>
+
+
+                        <!-- Department -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="department"
+                                class="form-label"
+                            >
+                                Department
+                            </label>
+
+                            <input
+                                type="text"
+                                name="department"
+                                id="department"
+                                class="form-control"
+                                placeholder="e.g. Electronics"
+                                value="{% if student %}{{ student.department }}{% endif %}"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Program -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="program"
+                                class="form-label"
+                            >
+                                Program
+                            </label>
+
+                            <input
+                                type="text"
+                                name="program"
+                                id="program"
+                                class="form-control"
+                                placeholder="e.g. Electronics and Computing"
+                                value="{% if student %}{{ student.program }}{% endif %}"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Semester -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="semester"
+                                class="form-label"
+                            >
+                                Semester
+                            </label>
+
+                            <input
+                                type="number"
+                                name="semester"
+                                id="semester"
+                                class="form-control"
+                                min="1"
+                                max="20"
+                                placeholder="e.g. 4"
+                                value="{% if student %}{{ student.semester }}{% endif %}"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- ================================================= -->
+                        <!-- BUTTONS -->
+                        <!-- ================================================= -->
+
+                        <div class="d-flex gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Save Student
+                            </button>
+
+
+                            <a
+                                href="{% url 'student_list' %}"
+                                class="btn btn-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>

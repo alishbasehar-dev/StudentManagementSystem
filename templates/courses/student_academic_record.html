@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Academic Record | Student Management System
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body class="bg-light">
+
+
+<!-- ============================================================
+     NAVBAR
+============================================================ -->
+
+<nav class="navbar navbar-dark bg-primary">
+
+    <div class="container">
+
+        <a
+            class="navbar-brand"
+            href="/"
+        >
+            Student Management System
+        </a>
+
+        <a
+            href="{% url 'logout' %}"
+            class="btn btn-light btn-sm"
+        >
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ============================================================
+     MAIN CONTENT
+============================================================ -->
+
+<div class="container mt-5">
+
+
+    <!-- Student Information -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h2>
+                {{ student.user.get_full_name }}
+            </h2>
+
+            <p class="text-muted mb-1">
+
+                Student ID:
+                <strong>
+                    {{ student.student_id }}
+                </strong>
+
+            </p>
+
+            <p class="text-muted mb-1">
+
+                Department:
+                <strong>
+                    {{ student.department }}
+                </strong>
+
+            </p>
+
+            <p class="text-muted mb-0">
+
+                Program:
+                <strong>
+                    {{ student.program }}
+                </strong>
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <h2 class="mb-4">
+        Academic Record
+    </h2>
+
+
+    {% for record in academic_records %}
+
+
+    <!-- ========================================================
+         COURSE
+    ========================================================= -->
+
+    <div class="card shadow-sm mb-4">
+
+
+        <div class="card-header bg-primary text-white">
+
+            <div class="d-flex justify-content-between">
+
+                <div>
+
+                    <h4 class="mb-0">
+                        {{ record.course.course_code }}
+                    </h4>
+
+                    <small>
+                        {{ record.course.course_name }}
+                    </small>
+
+                </div>
+
+                <div>
+
+                    Credit Hours:
+                    {{ record.course.credit_hours }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body">
+
+
+            <!-- ==================================================
+                 ATTENDANCE
+            =================================================== -->
+
+            <h5 class="mb-3">
+                Attendance
+            </h5>
+
+
+            <div class="row mb-4">
+
+
+                <div class="col-md-3">
+
+                    <div class="card text-center">
+
+                        <div class="card-body">
+
+                            <h4>
+                                {{ record.total_attendance }}
+                            </h4>
+
+                            <small class="text-muted">
+                                Total Classes
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <div class="card text-center">
+
+                        <div class="card-body">
+
+                            <h4 class="text-success">
+                                {{ record.present_count }}
+                            </h4>
+
+                            <small class="text-muted">
+                                Present
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <div class="card text-center">
+
+                        <div class="card-body">
+
+                            <h4 class="text-danger">
+                                {{ record.absent_count }}
+                            </h4>
+
+                            <small class="text-muted">
+                                Absent
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <div class="card text-center">
+
+                        <div class="card-body">
+
+                            <h4 class="text-primary">
+                                {{ record.attendance_percentage }}%
+                            </h4>
+
+                            <small class="text-muted">
+                                Attendance
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ==================================================
+                 MARKS
+            =================================================== -->
+
+            <h5 class="mb-3">
+                Marks & Grades
+            </h5>
+
+
+            <div class="table-responsive">
+
+                <table class="table table-hover">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Exam Type</th>
+
+                            <th>Exam Name</th>
+
+                            <th>Obtained</th>
+
+                            <th>Total</th>
+
+                            <th>Percentage</th>
+
+                            <th>Grade</th>
+
+                            <th>Remarks</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                    {% for result in record.results %}
+
+                    <tr>
+
+                        <td>
+                            {{ result.exam_type }}
+                        </td>
+
+                        <td>
+                            {{ result.exam_name }}
+                        </td>
+
+                        <td>
+                            {{ result.obtained_marks }}
+                        </td>
+
+                        <td>
+                            {{ result.total_marks }}
+                        </td>
+
+                        <td>
+
+                            {% widthratio result.obtained_marks result.total_marks 100 %}%
+
+                        </td>
+
+                        <td>
+
+                            {% if result.grade == 'F' %}
+
+                                <span class="badge bg-danger">
+                                    {{ result.grade }}
+                                </span>
+
+                            {% elif result.grade == 'A' or result.grade == 'A-' %}
+
+                                <span class="badge bg-success">
+                                    {{ result.grade }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-primary">
+                                    {{ result.grade }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ result.remarks|default:"-" }}
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="text-center text-muted py-4"
+                        >
+
+                            No marks have been entered for this course.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- ==================================================
+                 OVERALL PERFORMANCE
+            =================================================== -->
+
+            {% if record.total_possible > 0 %}
+
+            <div class="alert alert-info mt-4">
+
+                <strong>
+                    Overall Marks:
+                </strong>
+
+                {{ record.total_obtained }}
+                /
+                {{ record.total_possible }}
+
+                &nbsp;&nbsp;
+
+                <strong>
+                    Overall Percentage:
+                </strong>
+
+                {{ record.overall_percentage }}%
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+
+    {% empty %}
+
+
+    <!-- No Courses -->
+
+    <div class="alert alert-warning">
+
+        This student is not enrolled in any courses yet.
+
+    </div>
+
+
+    {% endfor %}
+
+
+</div>
+
+
+</body>
+
+</html>

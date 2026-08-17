@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Student Dashboard | Student Management System
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body class="bg-light">
+
+
+<!-- ===================================================== -->
+<!-- NAVBAR -->
+<!-- ===================================================== -->
+
+<nav class="navbar navbar-dark bg-primary">
+
+    <div class="container">
+
+        <a
+            href="{% url 'student_dashboard' %}"
+            class="navbar-brand"
+        >
+            Student Management System
+        </a>
+
+
+        <div>
+
+            <span class="text-white me-3">
+
+                Welcome,
+
+                {% if student.user.get_full_name %}
+                    {{ student.user.get_full_name }}
+                {% else %}
+                    {{ student.user.username }}
+                {% endif %}
+
+            </span>
+
+
+            <a
+                href="{% url 'logout' %}"
+                class="btn btn-light btn-sm"
+            >
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- ===================================================== -->
+<!-- MAIN CONTENT -->
+<!-- ===================================================== -->
+
+<div class="container mt-5">
+
+
+    <!-- ================================================= -->
+    <!-- STUDENT PROFILE -->
+    <!-- ================================================= -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h2>
+                Student Dashboard
+            </h2>
+
+            <p class="text-muted mb-0">
+                Welcome to your academic dashboard.
+            </p>
+
+            <hr>
+
+
+            <div class="row">
+
+
+                <!-- Student ID -->
+
+                <div class="col-md-3">
+
+                    <strong>
+                        Student ID
+                    </strong>
+
+                    <p>
+                        {{ student.student_id }}
+                    </p>
+
+                </div>
+
+
+                <!-- Name -->
+
+                <div class="col-md-3">
+
+                    <strong>
+                        Name
+                    </strong>
+
+                    <p>
+
+                        {% if student.user.get_full_name %}
+
+                            {{ student.user.get_full_name }}
+
+                        {% else %}
+
+                            {{ student.user.username }}
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+
+                <!-- Email -->
+
+                <div class="col-md-3">
+
+                    <strong>
+                        Email
+                    </strong>
+
+                    <p>
+                        {{ student.user.email|default:"-" }}
+                    </p>
+
+                </div>
+
+
+                <!-- Program -->
+
+                <div class="col-md-3">
+
+                    <strong>
+                        Program
+                    </strong>
+
+                    <p>
+                        {{ student.program|default:"-" }}
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- STATISTICS -->
+    <!-- ================================================= -->
+
+    <div class="row g-4">
+
+
+        <!-- Enrolled Courses -->
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Enrolled Courses
+                    </h6>
+
+                    <h2>
+                        {{ total_courses }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Attendance -->
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Attendance
+                    </h6>
+
+                    <h2>
+                        {{ attendance_percentage }}%
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Assessments -->
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Assessments
+                    </h6>
+
+                    <h2>
+                        {{ total_results }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Academic Percentage -->
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Academic Percentage
+                    </h6>
+
+                    <h2>
+                        {{ overall_percentage }}%
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- ATTENDANCE SUMMARY -->
+    <!-- ================================================= -->
+
+    <div class="card shadow-sm mt-4">
+
+        <div class="card-body">
+
+            <h4>
+                Attendance Summary
+            </h4>
+
+
+            <div class="row mt-3">
+
+
+                <!-- Present -->
+
+                <div class="col-md-3">
+
+                    <div class="alert alert-success">
+
+                        <strong>
+                            Present
+                        </strong>
+
+                        <h4>
+                            {{ present_count }}
+                        </h4>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Absent -->
+
+                <div class="col-md-3">
+
+                    <div class="alert alert-danger">
+
+                        <strong>
+                            Absent
+                        </strong>
+
+                        <h4>
+                            {{ absent_count }}
+                        </h4>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Late -->
+
+                <div class="col-md-3">
+
+                    <div class="alert alert-warning">
+
+                        <strong>
+                            Late
+                        </strong>
+
+                        <h4>
+                            {{ late_count }}
+                        </h4>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Leave -->
+
+                <div class="col-md-3">
+
+                    <div class="alert alert-info">
+
+                        <strong>
+                            Leave
+                        </strong>
+
+                        <h4>
+                            {{ leave_count }}
+                        </h4>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- MY COURSES -->
+    <!-- ================================================= -->
+
+    <div class="card shadow-sm mt-4 mb-5">
+
+        <div class="card-body">
+
+            <h4 class="mb-4">
+                My Courses
+            </h4>
+
+
+            <!-- ================================================= -->
+            <!-- COURSE LOOP -->
+            <!-- ================================================= -->
+
+            {% for item in course_data %}
+
+
+                <div class="card border mb-4">
+
+                    <div class="card-body">
+
+
+                        <!-- ================================================= -->
+                        <!-- COURSE INFORMATION -->
+                        <!-- ================================================= -->
+
+                        <div class="row">
+
+
+                            <!-- Course -->
+
+                            <div class="col-md-4">
+
+                                <h5>
+                                    {{ item.course.course_code }}
+                                </h5>
+
+                                <p class="mb-1">
+                                    {{ item.course.course_name }}
+                                </p>
+
+                                <small class="text-muted">
+
+                                    Credit Hours:
+                                    {{ item.course.credit_hours }}
+
+                                </small>
+
+                            </div>
+
+
+                            <!-- Teacher -->
+
+                            <div class="col-md-4">
+
+                                <strong>
+                                    Teacher
+                                </strong>
+
+                                <p>
+
+                                    {% if item.teacher %}
+
+                                        {% if item.teacher.user.get_full_name %}
+
+                                            {{ item.teacher.user.get_full_name }}
+
+                                        {% else %}
+
+                                            {{ item.teacher.user.username }}
+
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        Not Assigned
+
+                                    {% endif %}
+
+                                </p>
+
+                            </div>
+
+
+                            <!-- Attendance -->
+
+                            <div class="col-md-4">
+
+                                <strong>
+                                    Attendance
+                                </strong>
+
+                                <h4>
+                                    {{ item.attendance_percentage }}%
+                                </h4>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <hr>
+
+
+                        <!-- ================================================= -->
+                        <!-- ATTENDANCE RECORDS -->
+                        <!-- ================================================= -->
+
+                        <h6>
+                            Attendance
+                        </h6>
+
+
+                        <div class="table-responsive">
+
+                            <table class="table table-sm">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+                                            Date
+                                        </th>
+
+                                        <th>
+                                            Status
+                                        </th>
+
+                                        <th>
+                                            Remarks
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+
+                                    {% for attendance in item.attendance_records %}
+
+
+                                        <tr>
+
+                                            <td>
+                                                {{ attendance.date }}
+                                            </td>
+
+
+                                            <td>
+
+
+                                                {% if attendance.status == 'Present' %}
+
+                                                    <span class="badge bg-success">
+                                                        Present
+                                                    </span>
+
+
+                                                {% elif attendance.status == 'Absent' %}
+
+                                                    <span class="badge bg-danger">
+                                                        Absent
+                                                    </span>
+
+
+                                                {% elif attendance.status == 'Late' %}
+
+                                                    <span class="badge bg-warning text-dark">
+                                                        Late
+                                                    </span>
+
+
+                                                {% elif attendance.status == 'Leave' %}
+
+                                                    <span class="badge bg-info">
+                                                        Leave
+                                                    </span>
+
+
+                                                {% endif %}
+
+
+                                            </td>
+
+
+                                            <td>
+
+                                                {{ attendance.remarks|default:"-" }}
+
+                                            </td>
+
+                                        </tr>
+
+
+                                    {% empty %}
+
+
+                                        <tr>
+
+                                            <td
+                                                colspan="3"
+                                                class="text-center text-muted"
+                                            >
+                                                No attendance records.
+                                            </td>
+
+                                        </tr>
+
+
+                                    {% endfor %}
+
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+
+
+                        <!-- ================================================= -->
+                        <!-- RESULTS -->
+                        <!-- ================================================= -->
+
+                        <h6 class="mt-4">
+                            Marks & Grades
+                        </h6>
+
+
+                        <div class="table-responsive">
+
+                            <table class="table table-sm table-hover">
+
+
+                                <thead class="table-dark">
+
+                                    <tr>
+
+                                        <th>
+                                            Exam
+                                        </th>
+
+                                        <th>
+                                            Type
+                                        </th>
+
+                                        <th>
+                                            Marks
+                                        </th>
+
+                                        <th>
+                                            Percentage
+                                        </th>
+
+                                        <th>
+                                            Grade
+                                        </th>
+
+                                        <th>
+                                            Remarks
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+
+                                    {% for result in item.results %}
+
+
+                                        <tr>
+
+
+                                            <td>
+                                                {{ result.exam_name }}
+                                            </td>
+
+
+                                            <td>
+                                                {{ result.exam_type }}
+                                            </td>
+
+
+                                            <td>
+
+                                                {{ result.obtained_marks }}
+                                                /
+                                                {{ result.total_marks }}
+
+                                            </td>
+
+
+                                            <td>
+
+                                                {{ result.calculate_percentage|floatformat:2 }}%
+
+                                            </td>
+
+
+                                            <td>
+
+                                                <span class="badge bg-primary">
+
+                                                    {{ result.grade }}
+
+                                                </span>
+
+                                            </td>
+
+
+                                            <td>
+
+                                                {{ result.remarks|default:"-" }}
+
+                                            </td>
+
+
+                                        </tr>
+
+
+                                    {% empty %}
+
+
+                                        <tr>
+
+                                            <td
+                                                colspan="6"
+                                                class="text-center text-muted"
+                                            >
+
+                                                No marks entered yet.
+
+                                            </td>
+
+                                        </tr>
+
+
+                                    {% endfor %}
+
+
+                                </tbody>
+
+
+                            </table>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            {% empty %}
+
+
+                <!-- ================================================= -->
+                <!-- NO COURSES -->
+                <!-- ================================================= -->
+
+                <div class="alert alert-info">
+
+                    You are not enrolled in any courses yet.
+
+                </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- BOOTSTRAP JS -->
+<!-- ===================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
+
+</body>
+
+</html>
